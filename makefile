@@ -1,8 +1,10 @@
-progs:binaire/main.o binaire/neurone.o binaire/data.o
-	gcc binaire/main.o binaire/neurone.o binaire/data.o -o progs
-binaire/main.o:source/main.c header/neurone.h header/data.h
+progs:binaire/main.o binaire/arbre.o binaire/liste.o binaire/affichage.o
+	gcc binaire/main.o binaire/arbre.o binaire/liste.o binaire/affichage.o -o progs
+binaire/main.o:source/main.c header/arbre.h header/liste.h header/affichage.h
 	cd binaire && gcc -c ../source/main.c
-binaire/data.o:source/data.c header/data.h
-	cd binaire && gcc -c ../source/data.c
-binaire/neurone.o:source/neurone.c header/neurone.h
-	cd binaire && gcc -c ../source/neurone.c
+binaire/liste.o:source/liste.c header/liste.h
+	cd binaire && gcc -c ../source/liste.c
+binaire/affichage.o:source/affichage.c header/affichage.h
+	cd binaire && gcc -c ../source/affichage.c
+binaire/arbre.o:source/arbre.c header/arbre.h
+	cd binaire && gcc -c ../source/arbre.c
