@@ -19,7 +19,7 @@ typedef struct config
 }*Config;
 
 
-char* openBalise(char* content)
+/*char* openBalise(char* content)
 {
 	char* long_content=(char*) malloc((strlen(content)+2) * sizeof(char));
 	return strcat(strcat(strcpy(long_content,"<"),content),">");
@@ -35,7 +35,7 @@ char* uniqueBalise(char* content)
 {
 	char* long_content=(char*) malloc((strlen(content)+3) * sizeof(char));
 	return strcat(strcat(strcpy(long_content,"<"),content),"/>");
-}
+}*/
 
 /*ListeInt ListeInt_addEnd(ListeInt lst, int valeur)
 {
