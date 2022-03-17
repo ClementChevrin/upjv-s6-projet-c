@@ -1,5 +1,5 @@
-progs:binaire/main.o binaire/arbre.o binaire/liste.o binaire/affichage.o
-	gcc binaire/main.o binaire/arbre.o binaire/liste.o binaire/affichage.o -o progs
+prog:binaire/main.o binaire/arbre.o binaire/liste.o binaire/affichage.o
+	gcc binaire/main.o binaire/arbre.o binaire/liste.o binaire/affichage.o -o prog
 binaire/main.o:source/main.c header/arbre.h header/liste.h header/affichage.h
 	cd binaire && gcc -c ../source/main.c
 binaire/liste.o:source/liste.c header/liste.h

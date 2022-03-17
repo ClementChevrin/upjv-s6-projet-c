@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "liste.h"
+#include "../header/liste.h"
 
 typedef struct Feuille
 {
@@ -190,8 +190,8 @@ int contient(Arbre feuille,char* mot,int i)
 Arbre createArbre(char* langue,Config c)
 {
 	// Chemin d'acces du dictionnaire
-	char* path = (char*)malloc((strlen(langue)+17)*sizeof(char));
-	strcat(strcat(strcpy(path,"../resources/"),langue),".txt");
+	char* path = (char*)malloc((strlen(langue)+9)*sizeof(char));
+	strcat(strcat(strcpy(path,"data/"),langue),".txt");
 
 	// Creation arbre
 	Arbre dictionnaire = newArbre(0,NULL,NULL);

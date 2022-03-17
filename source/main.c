@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "liste.h"
-#include "arbre.h"
-#include "affichage.h"
+#include "../header/liste.h"
+#include "../header/arbre.h"
+#include "../header/affichage.h"
 
 char* delChar(char* chaine,char c)
 {
