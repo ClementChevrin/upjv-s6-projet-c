@@ -93,6 +93,16 @@ Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant)
 	return a;
 }
 
+// Alloue la configuration
+Config newConfig()
+{
+	Config c = (Config)malloc(sizeof(struct config));
+	for (int i = 0; i < 26; ++i) c->occLettre[i]=0;
+	c->total = 0;
+	c->nb_lettre_tirage = 0;
+	return c;
+}
+
 // Ajoute un mot dans un arbre
 void addMot(Arbre feuille,char* mot,int i)
 {

@@ -8,45 +8,45 @@
 
 char* delChar(char* chaine,char c)
 {
-	int boolean=1,j=0;
-	char* retour = (char*)malloc(sizeof(char)*strlen(chaine)-1);
-	for (int i = 0; i < chaine[i]!='\0'; ++i)
+	int contient = 0;
+	for (int i = 0; i < strlen(chaine); ++i)
 	{
-		if(boolean && chaine[i]==c)
+		if (chaine[i] == c) contient = 1;
+	}
+	if (contient)
+	{
+		int j=0,i=0;
+		char* retour = (char*)malloc(sizeof(char)*strlen(chaine)-1);
+		while (chaine[i]!=c && chaine[i]!='\0')
 		{
-			boolean = 0;
+			retour[i] = chaine[i];
+			i++;
 		}
-		else
+		j=i;
+		i++;
+		while (chaine[i]!='\0')
 		{
-			retour[j]=retour[i];
+			retour[j] = chaine[i];
+			i++;
 			j++;
 		}
+		retour[strlen(chaine)-1]='\0';
+		return retour;
 	}
-	retour[strlen(chaine)-1]='\0';
-	return retour;
+	else return chaine;
 }
 
 
 int main(int argc, char const *argv[])
 {
 	srand(time(NULL));
-	Config c = (Config)malloc(sizeof(struct config));
-	for (int i = 0; i < 26; ++i) c->occLettre[i]=0;
-	c->total = 0;
+	Config c = newConfig();
 	Arbre arb = createArbre("fr",c);
-	for (int i = 0; i < 26; ++i)
-	{
-		printf("%c : %d\n",i+'a',c->occLettre[i] );
-	}
-	printf("total : %d\n",c->total );
 	char* liste_lettre = (char*)malloc(sizeof(char)*10);
-	for (int i = 0; i < 9; ++i)
-	{
-		liste_lettre[i] = pullLetter(c);
-	}
+	for (int i = 0; i < 9; ++i) liste_lettre[i] = pullLetter(c);
 	liste_lettre[9]='\0';
+	printf("%s\n", delChar("egeferfa",'z'));
 	system("pause");
-	printf("%s\n", delChar("egeferfa",'f'));
 	Liste lst = longestsWord(arb,liste_lettre);
 	Liste lst2 = lst;
 	while(lst2 != NULL)

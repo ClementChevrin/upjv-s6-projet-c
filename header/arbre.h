@@ -28,6 +28,9 @@ char pullLetter(Config c);
 // Alloue une nouvelle feuille de l'arbre
 Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant);
 
+// Alloue la configuration
+Config newConfig();
+
 // Ajoute un mot dans un arbre
 void addMot(Arbre feuille,char* mot,int i);
 
