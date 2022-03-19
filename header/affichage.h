@@ -1,3 +1,5 @@
+int equals(char* c1,char* c2);
+
 // Vide l'affichage
 void affichage_clear();
 
@@ -11,4 +13,7 @@ void affichage_WordList(char * title,int col,int widthcol,int line,Liste mot);
 void affichage_LetterList(char* title,char* listletter);
 
 // Affiche le menu
-void affichage_Menu();
+void affichage_Menu(char* title,int nb_option,...);
+
+// Retourne un choix
+char* affichage_InputConditionnelle(int nb_option,...);

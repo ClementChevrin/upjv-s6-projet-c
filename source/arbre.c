@@ -72,15 +72,52 @@ int randnumber(int min,int max)
 	return (rand()%(max-min+1))+min;
 }
 
-// Donne une lettre tire aleatoirement
-char pullLetter(Config c)
+// Supprime la premier occurence d'un caractere dans une chaine
+char* delChar(char* chaine,char c)
 {
-	int var = randnumber(0,c->total);
-	for (int i = 0; i < 26; ++i)
+	int contient = 0;
+	for (int i = 0; i < strlen(chaine); ++i)
 	{
-		var=var-c->occLettre[i];
-		if (var<=0) return i+'a';
+		if (chaine[i] == c) contient = 1;
 	}
+	if (contient)
+	{
+		int j=0,i=0;
+		char* retour = (char*)malloc(sizeof(char)*strlen(chaine)-1);
+		while (chaine[i]!=c && chaine[i]!='\0')
+		{
+			retour[i] = chaine[i];
+			i++;
+		}
+		j=i;
+		i++;
+		while (chaine[i]!='\0')
+		{
+			retour[j] = chaine[i];
+			i++;
+			j++;
+		}
+		retour[strlen(chaine)-1]='\0';
+		return retour;
+	}
+	else return chaine;
+}
+
+// Donne une lettre tire aleatoirement
+char* pullTirage(Config c,int taille)
+{
+	char* tirage = (char*)malloc(sizeof(char)*taille);
+	for (int i = 0; i < taille; ++i) tirage[i]=0;
+	for (int i = 0; i < taille-1; ++i)
+	{
+		int var = randnumber(0,c->total);
+		for (int j = 0; j < 26 && tirage[i]==0; ++j)
+		{
+			var=var-c->occLettre[j];
+			if (var<=0) tirage[i] = j+'a';
+		}
+	}
+	return tirage;
 }
 
 // Alloue une nouvelle feuille de l'arbre

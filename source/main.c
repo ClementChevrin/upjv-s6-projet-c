@@ -6,46 +6,24 @@
 #include "../header/arbre.h"
 #include "../header/affichage.h"
 
-char* delChar(char* chaine,char c)
-{
-	int contient = 0;
-	for (int i = 0; i < strlen(chaine); ++i)
-	{
-		if (chaine[i] == c) contient = 1;
-	}
-	if (contient)
-	{
-		int j=0,i=0;
-		char* retour = (char*)malloc(sizeof(char)*strlen(chaine)-1);
-		while (chaine[i]!=c && chaine[i]!='\0')
-		{
-			retour[i] = chaine[i];
-			i++;
-		}
-		j=i;
-		i++;
-		while (chaine[i]!='\0')
-		{
-			retour[j] = chaine[i];
-			i++;
-			j++;
-		}
-		retour[strlen(chaine)-1]='\0';
-		return retour;
-	}
-	else return chaine;
-}
+
 
 
 int main(int argc, char const *argv[])
 {
 	srand(time(NULL));
+	// Interface de menu
+	affichage_Title();
+	affichage_Menu("MENU",3,"Lancer une partie","Parametre","Quitter");
+	char* retour = affichage_InputConditionnelle(3,"1","2","3");
+
+	// Interface de jeu
+
 	Config c = newConfig();
 	Arbre arb = createArbre("fr",c);
-	char* liste_lettre = (char*)malloc(sizeof(char)*10);
-	for (int i = 0; i < 9; ++i) liste_lettre[i] = pullLetter(c);
-	liste_lettre[9]='\0';
-	printf("%s\n", delChar("egeferfa",'z'));
+	char* liste_lettre = pullTirage(c,10);
+	
+	
 	system("pause");
 	Liste lst = longestsWord(arb,liste_lettre);
 	Liste lst2 = lst;

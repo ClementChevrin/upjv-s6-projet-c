@@ -12,18 +12,21 @@ typedef struct config
 	int nb_lettre_tirage;
 }*Config;
 
-
+/*
 char* openBalise(char* content);
 
 char* closeBalise(char* content);
 
-char* uniqueBalise(char* content);
+char* uniqueBalise(char* content);*/
 
 // Genere un nombre aleatoire
 int randnumber(int min,int max);
 
+// Supprime la premier occurence d'un caractere dans une chaine
+char* delChar(char* chaine,char c);
+
 // Donne une lettre tire aleatoirement
-char pullLetter(Config c);
+char* pullTirage(Config c,int taille);
 
 // Alloue une nouvelle feuille de l'arbre
 Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant);

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include "../header/liste.h"
 
 
@@ -26,6 +27,14 @@ const int WIN_32 = 1;
 const int WIN_64 = 2;
 const int APPLE = 3;
 const int LINUX = 4;
+
+
+int equals(char* c1,char* c2)
+{
+	if (strlen(c1)!=strlen(c2)) return 0;
+	else for (int i = 0; i < strlen(c1); ++i) if (c1[i] != c2[i]) return 0;
+	return 1;
+}
 
 // Vide l'affichage
 void affichage_clear()
@@ -102,9 +111,41 @@ void affichage_LetterList(char* title,char* listletter)
 	printf("\b\xd9\n");
 }
 
-void affichage_Menu()
+void affichage_Menu(char* title,int nb_option,...)
 {
-	printf("\n\n      MENU :\n");
-	printf("\t1 - Jouer une partie\n");
-	printf("\t2 - Changer le dictionnaire\n");
+	printf("\n\n      %s :\n",title);
+	va_list content;
+	va_start(content, nb_option);
+	for (int i = 0; i < nb_option; ++i) printf("\t%d - %s\n",i+1,va_arg(content, char*));
+	va_end(content);
+}
+
+char* affichage_InputConditionnelle(int nb_option,...)
+{
+	printf("\n\n\\>");
+	char** tab = (char**)malloc(sizeof(char*)*nb_option);
+	va_list content;
+	va_start(content,nb_option);
+	for (int i = 0; i < nb_option; ++i) 
+	{
+		tab[i] = (char*)malloc(sizeof(char)*100);
+		strcpy(tab[i],va_arg(content,char*));
+	}
+	va_end(content);
+	int respect_condition = 1;
+	char* reponse = (char*)malloc(sizeof(char)*100);
+	while(respect_condition)
+	{	
+		scanf("%s",reponse);
+		for (int i = 0; i < nb_option; ++i) 
+		{
+			if (equals(tab[i],reponse)) 
+			{
+				for (int i = 0; i < nb_option; ++i) free(tab[i]);
+				free(tab);
+				return reponse;
+			}
+		}
+		printf("\b                                                \r\\>");
+	}
 }
