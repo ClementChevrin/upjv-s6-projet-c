@@ -13,9 +13,7 @@ int main(int argc, char const *argv[])
 {
 	srand(time(NULL));
 	// Interface de menu
-	printf("%s",affichage_Title());
-	printf("%s",affichage_Menu("MENU",3,"Lancer une partie","Parametre","Quitter"));
-	char* retour = affichage_InputConditionnelle(3,"1","2","3");
+	char* retour = affichage_InputConditionnelle("&s&s&s&c&c&c",affichage_Title(),affichage_Menu("MENU",3,"Lancer une partie","Parametre","Quitter"),"\\>","1","2","3");
 
 	// Interface de jeu
 
