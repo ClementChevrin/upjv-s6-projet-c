@@ -35,6 +35,26 @@ int equals(char* c1,char* c2)
 	else for (int i = 0; i < strlen(c1); ++i) if (c1[i] != c2[i]) return 0;
 	return 1;
 }
+char* affichage_IntToString(int number)
+{
+	char* string = (char*)malloc(sizeof(char)*15);
+    int i = 0;
+    while (number)
+    {
+        string[i]=number%10+'0';
+        number = number/10;
+        i++;
+    }
+    string[i]='\0';
+    i--;
+    for (int j = 0; j < i/2; ++j)
+    {
+        char c = string[j];
+        string[j] = string[i-i];
+        string[i-i] = c;
+    }
+    return string; 
+}
 
 // Vide l'affichage
 void affichage_clear()
@@ -98,21 +118,26 @@ void affichage_LetterList(char* title,char* listletter)
 
 char* affichage_Menu(char* title,int nb_option,...)
 {
-	printf("\n\n      %s :\n",title);
 	va_list content,size;
 	va_start(content, nb_option);
 	va_copy(size,content);
+
+	// Allocation de la chaine total
 	int sizealloc=strlen(title)+9+(5*nb_option);
-	for (int i = nb_option; i > 0; ++i)
+	int zero=1;
+	for (int i = nb_option; i > 0; i=i/10)
 	{
-		sizealloc += nb_option;
-		nb_option = nb_option%9; 
-
+		sizealloc += i*(1*zero);
+		zero = zero*10;
 	}
-	for (int i = 0; i < nb_option; ++i) sizealloc = sizealloc + strlen(va_arg(size, char*))
+	for (int i = 0; i < nb_option; ++i) sizealloc = sizealloc + strlen(va_arg(size, char*));
+	va_end(size);
+	char* menu = (char*)malloc(sizeof(char)*sizealloc);
 
-	for (int i = 0; i < nb_option; ++i) printf("\t%d - %s\n",i+1,va_arg(content, char*));
+	strcat(strcat(strcpy(menu,"\n\n      "),title)," :\n");
+	for (int i = 0; i < nb_option; ++i) strcat(strcat(strcat(strcat(strcat(menu,"\t"),affichage_IntToString(i+1))," - "),va_arg(content, char*)),"\n");
 	va_end(content);
+	return menu;
 }
 
 char* affichage_InputConditionnelle(int nb_option,...)
