@@ -142,24 +142,62 @@ char* affichage_Menu(char* title,int nb_option,...)
 	return menu;
 }
 
-char* affichage_InputConditionnelle(int nb_option,...)
+char* affichage_InputConditionnelle(char* format,...)
 {
-	printf("\n\n\\>");
-	char** tab = (char**)malloc(sizeof(char*)*nb_option);
-	va_list content;
-	va_start(content,nb_option);
-	for (int i = 0; i < nb_option; ++i) 
+	// Compte le nombre d'argument a partir du format
+	int nb_arg = 0,cpt=0;
+	while(format[cpt]!='\0')
 	{
-		tab[i] = (char*)malloc(sizeof(char)*100);
+		if (format[cpt]!='%')
+		{
+			if (format[cpt+1]!='s')nb_arg++;
+			else if (format[cpt+1]!='&')nb_arg++;
+		}
+		cpt++;
+	}
+
+	// Recuperation des chaines et des conditions
+	char** tab = (char**)malloc(sizeof(char*)*nb_arg);
+	va_list content,copy;
+	va_start(content,nb_arg);
+	va_copy(copy,content);
+	for (int i = 0; i < nb_arg; ++i) 
+	{
+		tab[i] = (char*)malloc(sizeof(char)*strlen(va_arg(copy,char*)));
 		strcpy(tab[i],va_arg(content,char*));
 	}
+	va_end(copy);
 	va_end(content);
-	int respect_condition = 1;
-	char* reponse = (char*)malloc(sizeof(char)*100);
-	while(respect_condition)
+
+
+	// Afficher la question
+	cpt=0;
+	int ind_s = 0;
+	while(format[cpt]!='\0')
+	{
+		if (format[cpt]!='%')
+		{
+			if (format[cpt+1]!='s')
+			{
+				printf("%s",tab[ind_s])
+				ind_s++;
+				cpt += 2;
+			}
+			else if (format[cpt+1]!='&') while(format[cpt]!='\0') cpt++;
+		}
+		else putc(format[cpt]);
+		cpt++;
+	}
+
+	// ALloue un buffer suffiant pour la saisie
+	int maxbuffer=0;
+	for (int i = ind_s; i < nb_arg; ++i) if (maxbuffer<strlen(tab[i])) maxbuffer = strlen(tab[i]) + 1;  
+	char* reponse = (char*)malloc(sizeof(char)*maxbuffer);
+
+	while(1)
 	{	
 		scanf("%s",reponse);
-		for (int i = 0; i < nb_option; ++i) 
+		for (int i = ind_s; i < nb_arg; ++i) 
 		{
 			if (equals(tab[i],reponse)) 
 			{
@@ -168,6 +206,34 @@ char* affichage_InputConditionnelle(int nb_option,...)
 				return reponse;
 			}
 		}
-		printf("\b                                                \r\\>");
+		affichage_clear();
+		cpt=0;
+
+
+
+
+
+
+
+
+
+
+		// A finir
+		int ind_s = 0;
+		while(format[cpt]!='\0')
+		{
+			if (format[cpt]!='%')
+			{
+				if (format[cpt+1]!='s')
+				{
+					printf("%s",tab[ind_s])
+					ind_s++;
+					cpt += 2;
+				}
+				else if (format[cpt+1]!='&') while(format[cpt]!='\0') cpt++;
+			}
+			else putc(format[cpt]);
+			cpt++;
+		}
 	}
 }

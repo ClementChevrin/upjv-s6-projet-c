@@ -13,11 +13,13 @@ int main(int argc, char const *argv[])
 {
 	srand(time(NULL));
 	// Interface de menu
-	char* retour = affichage_InputConditionnelle("&s&s&s&c&c&c",affichage_Title(),affichage_Menu("MENU",3,"Lancer une partie","Parametre","Quitter"),"\\>","1","2","3");
+	char* title = affichage_Title();
+	char* menu_1 = affichage_Menu("MENU",3,"Lancer une partie","Parametre","Quitter");
+	char* retour = affichage_InputConditionnelle("%s%s\n\n\\>%&%&%&",title,menu_1,"1","2","3");
 
 	// Interface de jeu
 
-	Config c = newConfig();
+	/*Config c = newConfig();
 	Arbre arb = createArbre("fr",c);
 	char* liste_lettre = pullTirage(c,10);
 	
@@ -31,7 +33,7 @@ int main(int argc, char const *argv[])
 		lst2 = lst2 ->next;
 	} 
 	Liste_free(lst);
-	system("pause");
+	system("pause");*/
 
 	/*
 	affichage_Title();
