@@ -12,11 +12,43 @@
 int main(int argc, char const *argv[])
 {
 	srand(time(NULL));
+	int loop = 1;
+	char* title;
+	char* menu_1;
+	char* menu_2;
+	char* retour_1;
 	// Interface de menu
-	char* title = affichage_Title();
-	char* menu_1 = affichage_Menu("MENU",3,"Lancer une partie","Parametre","Quitter");
-	char* retour = affichage_InputConditionnelle("%s%s\n\n\\>%&%&%&",title,menu_1,"1","2","3");
-
+	while(loop)
+	{
+		title = affichage_Title();
+		menu_1 = affichage_Menu("MENU",3,"Lancer une partie","Parametre","Quitter");
+		menu_2 = affichage_Menu("PARAMETRE",3,"Langue : fr","Nombre de lettre tire : 10","Quitter parametre");
+		retour_1 = affichage_InputConditionnelle("%s%s\n\n\\>%&%&%&",title,menu_1,"1","2","3");
+		if (equals(retour_1,"1"))
+		{
+			affichage_clear();
+		}
+		else if (equals(retour_1,"2"))
+		{
+			affichage_clear();
+			char* retour_2 = affichage_InputConditionnelle("%s%s\n\n\\>%&%&%&",title,menu_2,"1","2","3");
+			if (equals(retour_2,"1"))
+			{
+				/* code */
+			}
+			else if (equals(retour_2,"2"))
+			{
+				/* code */
+			}
+			free(retour_2);
+		}
+		else loop=0;
+		free(menu_1);
+		free(menu_2);
+		free(retour_1);
+		affichage_clear();
+	}
+	return 0;
 	// Interface de jeu
 
 	/*Config c = newConfig();

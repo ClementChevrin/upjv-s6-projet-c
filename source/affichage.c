@@ -148,10 +148,10 @@ char* affichage_InputConditionnelle(char* format,...)
 	int nb_arg = 0,cpt=0;
 	while(format[cpt]!='\0')
 	{
-		if (format[cpt]!='%')
+		if (format[cpt]=='%')
 		{
-			if (format[cpt+1]!='s')nb_arg++;
-			else if (format[cpt+1]!='&')nb_arg++;
+			if (format[cpt+1]=='s')nb_arg++;
+			else if (format[cpt+1]=='&')nb_arg++;
 		}
 		cpt++;
 	}
@@ -175,64 +175,62 @@ char* affichage_InputConditionnelle(char* format,...)
 	int ind_s = 0;
 	while(format[cpt]!='\0')
 	{
-		if (format[cpt]!='%')
+		if (format[cpt]=='%')
 		{
-			if (format[cpt+1]!='s')
+			if (format[cpt+1]=='s')
 			{
-				printf("%s",tab[ind_s])
+				printf("%s",tab[ind_s]);
 				ind_s++;
-				cpt += 2;
+				cpt++;
 			}
-			else if (format[cpt+1]!='&') while(format[cpt]!='\0') cpt++;
+			else if (format[cpt+1]=='&') 
+			{
+				while(format[cpt]!='\0') cpt++;
+				cpt--;
+			}
 		}
-		else putc(format[cpt]);
+		else putchar(format[cpt]);
 		cpt++;
 	}
-
-	// ALloue un buffer suffiant pour la saisie
+	// Alloue un buffer suffiant pour la saisie
 	int maxbuffer=0;
-	for (int i = ind_s; i < nb_arg; ++i) if (maxbuffer<strlen(tab[i])) maxbuffer = strlen(tab[i]) + 1;  
-	char* reponse = (char*)malloc(sizeof(char)*maxbuffer);
+	char* reponse = (char*)malloc(sizeof(char)*1024);
 
 	while(1)
 	{	
+		// Saisie conditionnelle
 		scanf("%s",reponse);
 		for (int i = ind_s; i < nb_arg; ++i) 
 		{
 			if (equals(tab[i],reponse)) 
 			{
-				for (int i = 0; i < nb_option; ++i) free(tab[i]);
+				for (int i = 0; i < nb_arg; ++i) free(tab[i]);
 				free(tab);
 				return reponse;
 			}
 		}
+
+		// Reaffichage
 		affichage_clear();
-		cpt=0;
-
-
-
-
-
-
-
-
-
-
-		// A finir
-		int ind_s = 0;
+		cpt = 0;
+		ind_s = 0;
 		while(format[cpt]!='\0')
 		{
-			if (format[cpt]!='%')
+			if (format[cpt]=='%')
 			{
-				if (format[cpt+1]!='s')
+				if (format[cpt+1]=='s')
 				{
-					printf("%s",tab[ind_s])
+					printf("%s",tab[ind_s]);
 					ind_s++;
-					cpt += 2;
+					cpt++;
 				}
-				else if (format[cpt+1]!='&') while(format[cpt]!='\0') cpt++;
+			else if (format[cpt+1]=='&') 
+			{
+				while(format[cpt]!='\0') cpt++;
+				cpt--;
 			}
-			else putc(format[cpt]);
+			}
+			else putchar(format[cpt]);
 			cpt++;
 		}
 	}

@@ -16,4 +16,4 @@ void affichage_LetterList(char* title,char* listletter);
 char* affichage_Menu(char* title,int nb_option,...);
 
 // Retourne un choix
-char* affichage_InputConditionnelle(int nb_option,...);
+char* affichage_InputConditionnelle(char* format,...);
