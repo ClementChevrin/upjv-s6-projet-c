@@ -16,6 +16,7 @@ typedef struct config
 	int occLettre[26];
 	int total;
 	int nb_lettre_tirage;
+	char* dictionnaire;
 }*Config;
 
 
@@ -104,11 +105,11 @@ char* delChar(char* chaine,char c)
 }
 
 // Donne une lettre tire aleatoirement
-char* pullTirage(Config c,int taille)
+char* pullTirage(Config c)
 {
-	char* tirage = (char*)malloc(sizeof(char)*taille);
-	for (int i = 0; i < taille; ++i) tirage[i]=0;
-	for (int i = 0; i < taille-1; ++i)
+	char* tirage = (char*)malloc(sizeof(char)*c->nb_lettre_tirage+1);
+	for (int i = 0; i < c->nb_lettre_tirage+1; ++i) tirage[i]=0;
+	for (int i = 0; i < c->nb_lettre_tirage; ++i)
 	{
 		int var = randnumber(0,c->total);
 		for (int j = 0; j < 26 && tirage[i]==0; ++j)
@@ -117,6 +118,7 @@ char* pullTirage(Config c,int taille)
 			if (var<=0) tirage[i] = j+'a';
 		}
 	}
+	tirage[c->nb_lettre_tirage]='\0';
 	return tirage;
 }
 
@@ -131,12 +133,45 @@ Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant)
 }
 
 // Alloue la configuration
-Config newConfig()
+Config newConfig(char* path)
 {
 	Config c = (Config)malloc(sizeof(struct config));
 	for (int i = 0; i < 26; ++i) c->occLettre[i]=0;
 	c->total = 0;
-	c->nb_lettre_tirage = 0;
+	FILE* ini = fopen(path,"r");
+	if (ini != NULL)
+	{
+		const char * separators = "=";
+		char buffer[50];
+		while (fgets(buffer,50,ini) != NULL)
+		{
+			if (strstr(buffer,"Langue")!=NULL)
+			{
+				char * strToken = strtok ( buffer, separators );
+			    if ( strToken != NULL ) 
+			    {
+			        strToken = strtok ( NULL, separators );
+			    }
+				c->dictionnaire = (char*)malloc(sizeof(char)*strlen(strToken));
+				strcpy(c->dictionnaire,delChar(strToken,'\n'));
+			}
+			else if(strstr(buffer,"Tirage")!=NULL)
+			{
+				char * strToken = strtok ( buffer, separators );
+			    if ( strToken != NULL ) 
+			    {
+			        strToken = strtok ( NULL, separators );
+			    }
+				c->nb_lettre_tirage = atoi(strToken);
+			}
+		}
+		fclose(ini);
+	}
+	else
+	{
+		free(c);
+		return NULL;
+	}
 	return c;
 }
 
@@ -234,11 +269,16 @@ int contient(Arbre feuille,char* mot,int i)
 }
 
 // Creer un arbre a partir d'un dictionnaire
-Arbre createArbre(char* langue,Config c)
+Arbre createArbre(Config c)
 {
 	// Chemin d'acces du dictionnaire
-	char* path = (char*)malloc((strlen(langue)+9)*sizeof(char));
-	strcat(strcat(strcpy(path,"data/"),langue),".txt");
+	if (c->dictionnaire == NULL)
+	{
+		fprintf(stderr, "Erreur : Aucune langue trouver dans le fichier config.ini, [Langue=]\n");
+		return NULL;
+	}
+	char* path = (char*)malloc((strlen(c->dictionnaire)+9)*sizeof(char));
+	strcat(strcat(strcpy(path,"data/"),c->dictionnaire),".txt");
 
 	// Creation arbre
 	Arbre dictionnaire = newArbre(0,NULL,NULL);
@@ -269,9 +309,13 @@ Arbre createArbre(char* langue,Config c)
 		}
 		return dictionnaire;
 	}
-	else fprintf(stderr, "Erreur : lecture du dictionnaire impossible\n");
+	else fprintf(stderr, "Erreur : Dictionnaire introuvable\n");
 	free(path);
 	return NULL;
+}
+void arbre_Free(Arbre a)
+{
+
 }
 
 Liste longestsWord(Arbre a,char* lst)

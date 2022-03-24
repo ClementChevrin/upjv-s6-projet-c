@@ -10,6 +10,7 @@ typedef struct config
 	int occLettre[26];
 	int total;
 	int nb_lettre_tirage;
+	char* dictionnaire;
 }*Config;
 
 /*
@@ -26,13 +27,13 @@ int randnumber(int min,int max);
 char* delChar(char* chaine,char c);
 
 // Donne une lettre tire aleatoirement
-char* pullTirage(Config c,int taille);
+char* pullTirage(Config c);
 
 // Alloue une nouvelle feuille de l'arbre
 Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant);
 
 // Alloue la configuration
-Config newConfig();
+Config newConfig(char* path);
 
 // Ajoute un mot dans un arbre
 void addMot(Arbre feuille,char* mot,int i);
@@ -44,6 +45,8 @@ void addOcLettre(char* buffer,Config c);
 int contient(Arbre feuille,char* mot,int i);
 
 // Creer un arbre a partir d'un dictionnaire
-Arbre createArbre(char* langue,Config c);
+Arbre createArbre(Config c);
+
+void arbre_Free(Arbre a);
 
 Liste longestsWord(Arbre a,char* lst);
