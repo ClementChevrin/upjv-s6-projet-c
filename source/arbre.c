@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <dirent.h>
 #include "../header/liste.h"
 
 typedef struct Feuille
@@ -19,49 +20,6 @@ typedef struct config
 	char* dictionnaire;
 }*Config;
 
-
-/*char* openBalise(char* content)
-{
-	char* long_content=(char*) malloc((strlen(content)+2) * sizeof(char));
-	return strcat(strcat(strcpy(long_content,"<"),content),">");
-}
-
-char* closeBalise(char* content)
-{
-	char* long_content=(char*) malloc((strlen(content)+3) * sizeof(char));
-	return strcat(strcat(strcpy(long_content,"</"),content),">");
-}
-
-char* uniqueBalise(char* content)
-{
-	char* long_content=(char*) malloc((strlen(content)+3) * sizeof(char));
-	return strcat(strcat(strcpy(long_content,"<"),content),"/>");
-}*/
-
-/*ListeInt ListeInt_addEnd(ListeInt lst, int valeur)
-{
-    if (lst == NULL){
-        ListeInt lst2 = (ListeInt)malloc(sizeof(struct CelluleInt));
-        lst2 -> item = valeur;
-        lst2 -> next = lst;
-        return lst2;
-    }
-    else
-    {
-        ListeInt lst3 = lst;
-        while(lst -> next!=NULL) lst = lst -> next;
-        ListeInt lst2 = (ListeInt)malloc(sizeof(struct CelluleInt));
-        lst2 -> item = valeur;
-        lst2 -> next = NULL;
-        lst -> next = lst2;
-        return lst3;
-    }
-}*/
-
-/*void printFeuille(Arbre a)
-{
-	printf("Caractere : %c Frere : %p Suivant : %p\n", a -> caractere,a -> frere,a -> suivant);
-}*/
 
 
 
@@ -120,6 +78,50 @@ char* pullTirage(Config c)
 	}
 	tirage[c->nb_lettre_tirage]='\0';
 	return tirage;
+}
+
+// Verifie si le mot et dans le tirage
+int inTirage(char* tirage,char* mot)
+{
+	if (equals(mot,"")) return 0;
+	char* t=(char*)malloc(sizeof(char)*strlen(tirage));
+	strcpy(t,tirage);
+	int i = 0,b=1;
+	while(mot[i]!='\0')
+	{
+		b=1;
+		for (int j = 0; t[j]!='\0'; ++j)
+		{
+			if (t[j]==mot[i]) b=0;
+		}
+		if (b) return 0;
+		strcpy(t,delChar(t,mot[i]));
+		i++;
+	}
+	return 1;
+
+}
+
+int isDictionnaire(char* dic)
+{
+	struct dirent *dir;
+    // opendir() renvoie un pointeur de type DIR. 
+    DIR *d = opendir("data"); 
+    if (d!=NULL)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+        	int b = 1;
+        	if (strlen(dir->d_name)>strlen(dic))
+        	{
+        		for (int i = 0; dic[i]!='\0' ; ++i) if (dic[i]!=dir->d_name[i]) b = 0; 
+        		if (b) return 1;
+        	}
+        }
+        closedir(d);
+    }
+    system("pause");
+    return 0;
 }
 
 // Alloue une nouvelle feuille de l'arbre
@@ -223,7 +225,6 @@ void addMot(Arbre feuille,char* mot,int i)
 		{
 			if (feuillebis -> caractere != 0 && feuillebis -> caractere != '#')
 			{
-				//printf("if \n");
 				if (feuillebis -> frere == NULL) feuillebis -> frere = newArbre(0,NULL,NULL);
 				feuillebis = feuillebis -> frere;
 			}
@@ -318,9 +319,10 @@ void arbre_Free(Arbre a)
 
 }
 
-Liste longestsWord(Arbre a,char* lst)
+Liste longestsWord(Arbre a,char* tirage)
 {
-	return NULL;
+	Liste lst = NULL;
+	return lst;
 }
 
 

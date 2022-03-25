@@ -29,6 +29,11 @@ char* delChar(char* chaine,char c);
 // Donne une lettre tire aleatoirement
 char* pullTirage(Config c);
 
+// Verifie si le mot et dans le tirage
+int inTirage(char* tirage,char* mot);
+
+int isDictionnaire(char* dic);
+
 // Alloue une nouvelle feuille de l'arbre
 Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant);
 

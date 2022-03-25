@@ -40,3 +40,11 @@ void Liste_free(Liste lst)
 		free(lst);
 	}
 }
+
+// Compare si 2 chaines sont equivalentes
+int equals(char* c1,char* c2)
+{
+	if (strlen(c1)!=strlen(c2)) return 0;
+	else for (int i = 0; i < strlen(c1); ++i) if (c1[i] != c2[i]) return 0;
+	return 1;
+}

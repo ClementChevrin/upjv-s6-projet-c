@@ -1,4 +1,4 @@
-int equals(char* c1,char* c2);
+
 
 // Vide l'affichage
 void affichage_clear();
@@ -16,4 +16,4 @@ void affichage_LetterList(char* title,char* listletter);
 char* affichage_Menu(char* title,int nb_option,...);
 
 // Retourne un choix
-char* affichage_InputConditionnelle(char* format,...);
+char* affichage_InputConditionnelle(char* formats,...);

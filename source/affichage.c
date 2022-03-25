@@ -28,13 +28,7 @@ const int WIN_64 = 2;
 const int APPLE = 3;
 const int LINUX = 4;
 
-// Compare si 2 chaines sont equivalentes
-int equals(char* c1,char* c2)
-{
-	if (strlen(c1)!=strlen(c2)) return 0;
-	else for (int i = 0; i < strlen(c1); ++i) if (c1[i] != c2[i]) return 0;
-	return 1;
-}
+
 
 // Convertie int to string
 char* affichage_IntToString(int number)
@@ -55,6 +49,8 @@ char* affichage_IntToString(int number)
         string[j] = string[i-i];
         string[i-i] = c;
     }
+    printf("%s\n",string );
+    system("pause");
     return string; 
 }
 
