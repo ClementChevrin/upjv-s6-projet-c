@@ -62,6 +62,25 @@ char* delChar(char* chaine,char c)
 	else return chaine;
 }
 
+char* addChar(char* chaine,char c)
+{
+	if (chaine!=NULL)
+	{
+		char* nchaine = (char*)malloc(sizeof(char)*strlen(chaine)+2);
+		strcpy(nchaine,chaine);
+		nchaine[strlen(chaine)]=c;
+		nchaine[strlen(chaine)+1]='\0';
+		return nchaine;
+	}
+	else
+	{
+		char* nchaine = (char*)malloc(sizeof(char)*2);
+		nchaine[0]=c;
+		nchaine[1]='\0';
+		return nchaine;
+	}
+}
+
 // Donne une lettre tire aleatoirement
 char* pullTirage(Config c)
 {
@@ -120,7 +139,6 @@ int isDictionnaire(char* dic)
         }
         closedir(d);
     }
-    system("pause");
     return 0;
 }
 
@@ -319,10 +337,40 @@ void arbre_Free(Arbre a)
 
 }
 
-Liste longestsWord(Arbre a,char* tirage)
+void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
 {
-	Liste lst = NULL;
-	return lst;
+	if (a!=NULL && equals(tirage,"")!=1)
+	{
+		printf("Tirage : %s  Currentword : %s\n",tirage,currentword );
+		system("pause");
+		for (int i = 0; i < tirage[i]!='\0'; ++i)
+		{
+			Arbre abis = a;
+			while(abis!=NULL)
+			{
+				if (abis->caractere == tirage[i])
+				{
+					longestsWord(abis->suivant,lst,delChar(tirage,tirage[i]),addChar(currentword,tirage[i]));
+				}
+				else if (abis->caractere == '#') Liste_add(lst,currentword);
+				abis = abis->frere;
+			}
+		}
+		if(currentword != NULL) free(currentword);
+	}
+	else if (a!=NULL)
+	{
+		Arbre abis = a;
+		while(abis!=NULL)
+		{
+			if (abis->caractere == '#') Liste_add(lst,currentword);
+			else abis= abis->frere;
+		}
+	}
+	else 
+	{
+		if(currentword != NULL) free(currentword);
+	}
 }
 
 

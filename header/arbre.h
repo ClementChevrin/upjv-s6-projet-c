@@ -26,6 +26,8 @@ int randnumber(int min,int max);
 // Supprime la premier occurence d'un caractere dans une chaine
 char* delChar(char* chaine,char c);
 
+char* addChar(char* chaine,char c);
+
 // Donne une lettre tire aleatoirement
 char* pullTirage(Config c);
 
@@ -54,4 +56,4 @@ Arbre createArbre(Config c);
 
 void arbre_Free(Arbre a);
 
-Liste longestsWord(Arbre a,char* lst);
+void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword);

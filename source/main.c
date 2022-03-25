@@ -51,7 +51,13 @@ int main(int argc, char const *argv[])
 						printf("\n\n\\>");
 						scanf("%s",retour_3);
 					}
-					Liste lst = longestsWord(arb,tirage);
+					Liste lst = NULL;
+					printf("Liste: \n");
+					lst= Liste_add(lst,"");
+					longestsWord(arb,lst,tirage,NULL);
+					Liste_print(lst);
+					printf("Fin Liste \n");
+					system("pause");
 					while(!equals(retour_3,"o") && !equals(retour_3,"n"))
 					{
 						affichage_clear();

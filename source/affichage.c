@@ -49,8 +49,8 @@ char* affichage_IntToString(int number)
         string[j] = string[i-i];
         string[i-i] = c;
     }
-    printf("%s\n",string );
-    system("pause");
+    /*printf("%s\n",string );
+    system("pause");*/
     return string; 
 }
 

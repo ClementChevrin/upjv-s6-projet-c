@@ -41,6 +41,16 @@ void Liste_free(Liste lst)
 	}
 }
 
+void Liste_print(Liste lst)
+{
+	Liste lst2 = lst;
+	while(lst2!=NULL)
+	{
+		printf("%s\n",lst2->item);
+		lst2 = lst2 ->next;
+	}
+}
+
 // Compare si 2 chaines sont equivalentes
 int equals(char* c1,char* c2)
 {

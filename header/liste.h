@@ -10,5 +10,6 @@ typedef struct Cellule
 Liste Liste_add(Liste lst, string valeur);
 int Liste_size(Liste lst);
 void Liste_free(Liste lst);
+void Liste_print(Liste lst);
 // Compare si 2 chaines sont equivalentes
 int equals(char* c1,char* c2);
