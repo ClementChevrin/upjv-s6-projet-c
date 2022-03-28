@@ -8,6 +8,8 @@ typedef struct Cellule
 } *Liste;
 
 Liste Liste_add(Liste lst, string valeur);
+Liste Liste_addend(Liste lst, string valeur);
+int Liste_sizelongestword(Liste lst);
 int Liste_size(Liste lst);
 void Liste_free(Liste lst);
 void Liste_print(Liste lst);

@@ -53,20 +53,15 @@ int main(int argc, char const *argv[])
 					}
 					Liste lst = NULL;
 					lst = Liste_add(lst,"");
-					printf("Liste: \n");
-					lst= Liste_add(lst,"");
 					longestsWord(arb,lst,tirage,NULL);
-					printf("%s\n","Pause");
-					system("pause");
-					Liste_print(lst);
-					printf("Fin Liste \n");
-					system("pause");
 					while(!equals(retour_3,"o") && !equals(retour_3,"n"))
 					{
 						affichage_clear();
 						printf("%s",title);
 						affichage_WordList("Liste de mot possible",4,15,4,lst);
 						affichage_LetterList("Tirage",tirage);
+						Liste_print(lst);
+						printf("Size : %d\n",Liste_sizelongestword(lst));
 						printf("*Votre mot est correct*\nVoulez-vous rejouer? [o/n]\n\\>");
 						scanf("%s",retour_3);
 					}

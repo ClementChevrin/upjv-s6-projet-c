@@ -371,46 +371,38 @@ void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
 		for (int i = 0; i < tirage[i]!='\0'; ++i)
 		{
 			Arbre abis = a;
-			//printf("Test avec %c\n",tirage[i]);
 			while(abis!=NULL)
 			{
-				//printf("tour de while\n");
 				if (abis->caractere == tirage[i])
 				{
-					//printf("Suivant : %s%c\n",currentword,tirage[i]);
 					longestsWord(abis->suivant,lst,delChar(tirage,tirage[i]),addChar(currentword,tirage[i]));
-					//printf("1cur = %s\n",currentword );
 				}
 				else if (abis->caractere == '#') 
 				{
-					lst = Liste_add(lst,currentword);
-					//printf("2cur = %s\n",currentword );
+					lst = Liste_addend(lst,currentword);
 				}
 				abis = abis->frere;
 			}
-			//system("pause");
 		}
 		if(currentword != NULL) free(currentword);
 	}
 	else if (a!=NULL)
 	{
-		//printf("Tirage vide\n");
 		Arbre abis = a;
 		while(abis!=NULL)
 		{
 			if (abis->caractere == '#')
 			{
-				lst = Liste_add(lst,currentword);
+				lst = Liste_addend(lst,currentword);
+				return ;
 			}
 			else abis= abis->frere;
 		}
 	}
 	else 
 	{
-		//printf("Tirage  et arbre vide\n");
 		if(currentword != NULL) free(currentword);
 	}
-	//printf("Fin\n");
 }
 
 

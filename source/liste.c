@@ -13,12 +13,49 @@ typedef struct Cellule
 
 Liste Liste_add(Liste lst, string valeur)
 {
+	if(valeur==NULL) return lst;
 	Liste lst2 = (Liste)malloc(sizeof(struct Cellule));
 	lst2 -> item = (string)malloc(sizeof(char)*strlen(valeur));
     strcpy(lst2 -> item, valeur);
     lst2 -> next = lst;
     return lst2;
 }
+
+Liste Liste_addend(Liste lst, string valeur)
+{
+	if (valeur == NULL) return lst;
+    else if (lst == NULL) return Liste_add(lst,valeur);
+    else
+    {
+	    Liste lst3 = lst;
+	    while(lst -> next!=NULL) lst = lst -> next;
+		Liste lst2 = (Liste)malloc(sizeof(struct Cellule));
+		lst2 -> item = (string)malloc(sizeof(char)*strlen(valeur));
+	    strcpy(lst2 -> item, valeur);
+	    lst2 -> next = NULL;
+	    lst -> next = lst2;
+	    return lst3;
+	}
+}
+
+int Liste_sizelongestword(Liste lst)
+{
+	Liste ls = lst;
+	int size = 0;
+	while(ls!=NULL) 
+	{
+		if(ls->item!=NULL) 
+		{
+			if(strlen(ls->item)>size) 
+			{
+				size = strlen(ls->item);
+			}
+			ls = ls->next;
+		} 
+	}
+	return size;
+}
+
 int Liste_size(Liste lst)
 {
 	if (lst == NULL) return 0;
