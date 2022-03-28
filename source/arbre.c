@@ -142,6 +142,28 @@ int isDictionnaire(char* dic)
     return 0;
 }
 
+void notifyIni(char* property,char* value)
+{
+	FILE * newfile = fopen("data/nconfig.ini","w");
+	if (newfile!=NULL)
+	{
+		FILE * oldfile = fopen("data/config.ini","r");
+		if (oldfile!=NULL)
+		{		
+			fprintf(newfile, "%s=%s\n",property,value);
+			char buffer[100];
+			while(fgets(buffer,100,oldfile)!=NULL)
+			{
+				if(strstr( buffer, property)==NULL && !equals(buffer,"\n")) fprintf(newfile, "%s\n",buffer);
+			}
+			fclose(oldfile);
+		}
+		fclose(newfile);
+	}
+	remove("data/config.ini");
+	rename("data/nconfig.ini","data/config.ini");
+}
+
 // Alloue une nouvelle feuille de l'arbre
 Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant)
 {
@@ -334,44 +356,118 @@ Arbre createArbre(Config c)
 }
 void arbre_Free(Arbre a)
 {
-
+	if (a!=NULL)
+	{
+		if(a->frere!=NULL) arbre_Free(a->frere);
+		if(a->suivant!=NULL) arbre_Free(a->suivant);
+		free(a);
+	}
 }
 
-void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
+/*void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
 {
 	if (a!=NULL && equals(tirage,"")!=1)
 	{
-		printf("Tirage : %s  Currentword : %s\n",tirage,currentword );
-		system("pause");
 		for (int i = 0; i < tirage[i]!='\0'; ++i)
 		{
 			Arbre abis = a;
+			printf("Test avec %c\n",tirage[i]);
 			while(abis!=NULL)
 			{
+				printf("tour de while\n");
 				if (abis->caractere == tirage[i])
 				{
+					printf("Suivant : %s%c\n",currentword,tirage[i]);
 					longestsWord(abis->suivant,lst,delChar(tirage,tirage[i]),addChar(currentword,tirage[i]));
+					printf("1cur = %s\n",currentword );
 				}
-				else if (abis->caractere == '#') Liste_add(lst,currentword);
+				else if (abis->caractere == '#') 
+				{
+					lst = Liste_add(lst,currentword);
+					printf("2cur = %s\n",currentword );
+				}
 				abis = abis->frere;
 			}
+			system("pause");
 		}
 		if(currentword != NULL) free(currentword);
 	}
 	else if (a!=NULL)
 	{
+		printf("Tirage vide\n");
 		Arbre abis = a;
 		while(abis!=NULL)
 		{
-			if (abis->caractere == '#') Liste_add(lst,currentword);
+			if (abis->caractere == '#')
+			{
+				lst = Liste_add(lst,currentword);
+			}
 			else abis= abis->frere;
 		}
 	}
 	else 
 	{
+		printf("Tirage  et arbre vide\n");
 		if(currentword != NULL) free(currentword);
 	}
+	printf("Fin\n");
+}*/
+
+
+void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
+{
+	if (a!=NULL)
+	{
+		if (a->frere!=NULL) 
+		{
+			printf("a->frere\n");
+			longestsWord(a->frere,lst,tirage,currentword);
+		}
+		if (a->suivant!=NULL)
+		{
+			printf("a->suivant\n");
+			printf("addChar(%s,%c)=%s\n",currentword,a->caractere,addChar(currentword,a->caractere) );
+			longestsWord(a->suivant,lst,tirage,addChar(currentword,a->caractere));
+		}
+		if (a->caractere=='#')
+		{
+			if (currentword!=NULL)
+			{
+				printf("#\n");
+				char*tiragebis = (char*)malloc(sizeof(char)*strlen(tirage));
+				strcpy(tiragebis,tirage);
+				printf("alloc succes : %s\n",tiragebis);
+				system("pause");
+				printf("currentword = %s\n",currentword );
+				system("pause");
+				for (int i = 0; i < currentword[i]!='\0'; ++i)
+				{
+					//printf("currentword[%d] = %c\n",i,currentword[i]);
+					//system("pause");
+					int b = 1;
+					for (int j = 0; j < tiragebis[j]!='\0' && b==1; ++j)
+					{
+						//printf("tiragebis[%d] = %c\n",j,tiragebis[j]);
+						//system("pause");
+						if (currentword[i]==tiragebis[i])
+						{
+							//printf("oui\n");
+							strcpy(tiragebis,delChar(tiragebis,currentword[i]));
+							b=0;
+						}
+					}
+				}
+				printf("out #\n");
+				if (strlen(tirage)-strlen(tiragebis)==strlen(currentword)) 
+				{
+					lst = Liste_add(lst,currentword);
+					printf("lst = Liste_add(lst,%s)\n",currentword);
+					system("pause");
+				}
+				free(currentword);
+				free(tiragebis);
+			}
+		}
+	}
 }
-
-
 

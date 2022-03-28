@@ -52,9 +52,12 @@ int main(int argc, char const *argv[])
 						scanf("%s",retour_3);
 					}
 					Liste lst = NULL;
+					lst = Liste_add(lst,"");
 					printf("Liste: \n");
 					lst= Liste_add(lst,"");
 					longestsWord(arb,lst,tirage,NULL);
+					printf("%s\n","Pause");
+					system("pause");
 					Liste_print(lst);
 					printf("Fin Liste \n");
 					system("pause");
@@ -83,10 +86,11 @@ int main(int argc, char const *argv[])
 					while(!isDictionnaire(buffer))
 					{
 						affichage_clear();
-						printf("%s\n\n\nSaisissez une valeur\n\\>",title);
+						printf("%s%s\nSaisissez une valeur sans \".txt\"\n\\>",title,affichage_DictionnaireListe("data"));
 						scanf("%s",buffer);
 					}
 					strcpy(c->dictionnaire,buffer);
+					notifyIni("Langue",buffer);
 				}
 				else if (equals(retour_2,"2"))
 				{
@@ -98,6 +102,7 @@ int main(int argc, char const *argv[])
 						scanf("%d",&i);
 					}
 					c->nb_lettre_tirage = i;
+					notifyIni("Tirage",affichage_IntToString(i));
 				}
 				free(retour_2);
 			}

@@ -54,6 +54,8 @@ int contient(Arbre feuille,char* mot,int i);
 // Creer un arbre a partir d'un dictionnaire
 Arbre createArbre(Config c);
 
+void notifyIni(char* property,char* value);
+
 void arbre_Free(Arbre a);
 
 void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword);

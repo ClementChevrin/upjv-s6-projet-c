@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <dirent.h>
 #include "../header/liste.h"
 
 
@@ -33,8 +34,9 @@ const int LINUX = 4;
 // Convertie int to string
 char* affichage_IntToString(int number)
 {
-	char* string = (char*)malloc(sizeof(char)*15);
+    char* string = (char*)malloc(sizeof(char)*15);
     int i = 0;
+    if (number==0) return "0";
     while (number)
     {
         string[i]=number%10+'0';
@@ -43,14 +45,12 @@ char* affichage_IntToString(int number)
     }
     string[i]='\0';
     i--;
-    for (int j = 0; j < i/2; ++j)
+    for (int j = 0; j <= i/2; ++j)
     {
         char c = string[j];
-        string[j] = string[i-i];
-        string[i-i] = c;
+        string[j] = string[i-j];
+        string[i-j] = c;
     }
-    /*printf("%s\n",string );
-    system("pause");*/
     return string; 
 }
 
@@ -136,6 +136,54 @@ char* affichage_Menu(char* title,int nb_option,...)
 	for (int i = 0; i < nb_option; ++i) strcat(strcat(strcat(strcat(strcat(menu,"\t"),affichage_IntToString(i+1))," - "),va_arg(content, char*)),"\n");
 	va_end(content);
 	return menu;
+}
+
+char* affichage_DictionnaireListe(char* dic)
+{
+	struct dirent *dir;
+	int size = 0,nb_option = 0;;
+    // opendir() renvoie un pointeur de type DIR. 
+    DIR *d = opendir(dic); 
+    if (d!=NULL)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+        	int strsize = strlen(dir->d_name);
+        	if (strsize>5) 
+        	{
+        		if (dir->d_name[strsize-1]=='t' && dir->d_name[strsize-2]=='x' && dir->d_name[strsize-3]=='t' && dir->d_name[strsize-4]=='.') 
+        		{
+        			size +=strsize;
+        			nb_option++;
+        		}
+        	}
+        }
+        closedir(d);
+    }
+	size +=28+113+(6*nb_option);
+	char* menu = (char*)malloc(sizeof(char)*size);
+
+	strcpy(menu,"\n\n      LISTE DES LANGUES :\n");
+    d = opendir(dic); 
+    if (d!=NULL)
+    {
+    	int i = 1;
+        while ((dir = readdir(d)) != NULL)
+        {
+        	int strsize = strlen(dir->d_name);
+        	if (strsize>5) 
+    		{
+    			if (dir->d_name[strsize-1]=='t' && dir->d_name[strsize-2]=='x' && dir->d_name[strsize-3]=='t' && dir->d_name[strsize-4]=='.') 
+				{
+					strcat(strcat(strcat(strcat(strcat(menu,"\t"),affichage_IntToString(i))," - "),dir->d_name),"\n");
+					i++;
+				}
+			}
+        }
+        closedir(d);
+    }
+    strcat(menu,"\n(Pour ajouter un dictionnaire ajouter votre liste de mot dans un fichier .txt, il sera automatiquement detecte)\n");
+    return menu;
 }
 
 char* affichage_InputConditionnelle(char* format,...)
