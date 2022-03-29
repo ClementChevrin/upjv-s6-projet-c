@@ -1,17 +1,27 @@
-// Type string
-typedef char* string;
-
+// Structure Liste
 typedef struct Cellule
 {
-    string item;
+    char* item;
     struct Cellule *next;
-} *Liste;
+}*Liste;
 
-Liste Liste_add(Liste lst, string valeur);
-Liste Liste_addend(Liste lst, string valeur);
-int Liste_sizelongestword(Liste lst);
-int Liste_size(Liste lst);
-void Liste_free(Liste lst);
-void Liste_print(Liste lst);
-// Compare si 2 chaines sont equivalentes
-int equals(char* c1,char* c2);
+// Affiche une liste
+void Liste_Print(Liste lst);
+
+// Ajoute une cellule contenant valeur dans cette cellule a une liste
+Liste Liste_Add(Liste lst, char* valeur);
+
+// Ajoute une cellule contenant valeur dans cette cellule a la fin d'une liste
+Liste Liste_AddEnd(Liste lst, char* valeur);
+
+// Free une Liste
+void Liste_Free(Liste lst);
+
+// Renvoie une liste des mots de taille size avec une occurance pour chaque
+Liste Liste_Longest(Liste lst,int size);
+
+// Renvoie la taille de la liste
+int Liste_Size(Liste lst);
+
+// Renvoie la taille du mot le plus long de la liste
+int Liste_SizeLongestWord(Liste lst);

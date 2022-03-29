@@ -1,10 +1,13 @@
+#include <dirent.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <dirent.h>
+#include "../header/common.h"
 #include "../header/liste.h"
 
+// Structure Arbre
 typedef struct Feuille
 {
 	char caractere; // '#' fin de mot
@@ -12,6 +15,7 @@ typedef struct Feuille
 	struct Feuille* suivant;
 }*Arbre;
 
+// Structure Config
 typedef struct config
 {
 	int occLettre[26];
@@ -20,75 +24,14 @@ typedef struct config
 	char* dictionnaire;
 }*Config;
 
-
-
-
-
-
-// Genere un nombre aleatoire
-int randnumber(int min,int max)
-{ 
-	return (rand()%(max-min+1))+min;
-}
-
-// Supprime la premier occurence d'un caractere dans une chaine
-char* delChar(char* chaine,char c)
-{
-	int contient = 0;
-	for (int i = 0; i < strlen(chaine); ++i)
-	{
-		if (chaine[i] == c) contient = 1;
-	}
-	if (contient)
-	{
-		int j=0,i=0;
-		char* retour = (char*)malloc(sizeof(char)*strlen(chaine)-1);
-		while (chaine[i]!=c && chaine[i]!='\0')
-		{
-			retour[i] = chaine[i];
-			i++;
-		}
-		j=i;
-		i++;
-		while (chaine[i]!='\0')
-		{
-			retour[j] = chaine[i];
-			i++;
-			j++;
-		}
-		retour[strlen(chaine)-1]='\0';
-		return retour;
-	}
-	else return chaine;
-}
-
-char* addChar(char* chaine,char c)
-{
-	if (chaine!=NULL)
-	{
-		char* nchaine = (char*)malloc(sizeof(char)*strlen(chaine)+2);
-		strcpy(nchaine,chaine);
-		nchaine[strlen(chaine)]=c;
-		nchaine[strlen(chaine)+1]='\0';
-		return nchaine;
-	}
-	else
-	{
-		char* nchaine = (char*)malloc(sizeof(char)*2);
-		nchaine[0]=c;
-		nchaine[1]='\0';
-		return nchaine;
-	}
-}
-
 // Donne une lettre tire aleatoirement
-char* pullTirage(Config c)
+char* Arbre_PullTirage(Config c)
 {
 	char* tirage = (char*)malloc(sizeof(char)*c->nb_lettre_tirage+1);
 	for (int i = 0; i < c->nb_lettre_tirage+1; ++i) tirage[i]=0;
 	for (int i = 0; i < c->nb_lettre_tirage; ++i)
 	{
-		int var = randnumber(0,c->total);
+		int var = Common_Rand(0,c->total);
 		for (int j = 0; j < 26 && tirage[i]==0; ++j)
 		{
 			var=var-c->occLettre[j];
@@ -100,9 +43,9 @@ char* pullTirage(Config c)
 }
 
 // Verifie si le mot et dans le tirage
-int inTirage(char* tirage,char* mot)
+int Arbre_InTirage(char* tirage,char* mot)
 {
-	if (equals(mot,"")) return 0;
+	if (Common_Equals(mot,"")) return 0;
 	char* t=(char*)malloc(sizeof(char)*strlen(tirage));
 	strcpy(t,tirage);
 	int i = 0,b=1;
@@ -114,58 +57,14 @@ int inTirage(char* tirage,char* mot)
 			if (t[j]==mot[i]) b=0;
 		}
 		if (b) return 0;
-		strcpy(t,delChar(t,mot[i]));
+		strcpy(t,Common_DelChar(t,mot[i]));
 		i++;
 	}
 	return 1;
-
-}
-
-int isDictionnaire(char* dic)
-{
-	struct dirent *dir;
-    // opendir() renvoie un pointeur de type DIR. 
-    DIR *d = opendir("data"); 
-    if (d!=NULL)
-    {
-        while ((dir = readdir(d)) != NULL)
-        {
-        	int b = 1;
-        	if (strlen(dir->d_name)>strlen(dic))
-        	{
-        		for (int i = 0; dic[i]!='\0' ; ++i) if (dic[i]!=dir->d_name[i]) b = 0; 
-        		if (b) return 1;
-        	}
-        }
-        closedir(d);
-    }
-    return 0;
-}
-
-void notifyIni(char* property,char* value)
-{
-	FILE * newfile = fopen("data/nconfig.ini","w");
-	if (newfile!=NULL)
-	{
-		FILE * oldfile = fopen("data/config.ini","r");
-		if (oldfile!=NULL)
-		{		
-			fprintf(newfile, "%s=%s\n",property,value);
-			char buffer[100];
-			while(fgets(buffer,100,oldfile)!=NULL)
-			{
-				if(strstr( buffer, property)==NULL && !equals(buffer,"\n")) fprintf(newfile, "%s\n",buffer);
-			}
-			fclose(oldfile);
-		}
-		fclose(newfile);
-	}
-	remove("data/config.ini");
-	rename("data/nconfig.ini","data/config.ini");
 }
 
 // Alloue une nouvelle feuille de l'arbre
-Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant)
+Arbre Arbre_NewArbre(char c,struct Feuille* frere,struct Feuille* suivant)
 {
 	Arbre a = (Arbre)malloc(sizeof(struct Feuille));
 	a -> caractere = c;
@@ -175,7 +74,7 @@ Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant)
 }
 
 // Alloue la configuration
-Config newConfig(char* path)
+Config Arbre_NewConfig(char* path)
 {
 	Config c = (Config)malloc(sizeof(struct config));
 	for (int i = 0; i < 26; ++i) c->occLettre[i]=0;
@@ -195,7 +94,7 @@ Config newConfig(char* path)
 			        strToken = strtok ( NULL, separators );
 			    }
 				c->dictionnaire = (char*)malloc(sizeof(char)*strlen(strToken));
-				strcpy(c->dictionnaire,delChar(strToken,'\n'));
+				strcpy(c->dictionnaire,Common_DelChar(strToken,'\n'));
 			}
 			else if(strstr(buffer,"Tirage")!=NULL)
 			{
@@ -218,7 +117,7 @@ Config newConfig(char* path)
 }
 
 // Ajoute un mot dans un arbre
-void addMot(Arbre feuille,char* mot,int i)
+void Arbre_AddMot(Arbre feuille,char* mot,int i)
 {
 	Arbre feuillebis = feuille;
 	if (mot[i]!='\n' && mot[i]!='\0')
@@ -227,8 +126,8 @@ void addMot(Arbre feuille,char* mot,int i)
 		{
 			if (feuillebis -> caractere == mot[i])
 			{
-				if (feuillebis -> suivant == NULL) feuillebis -> suivant = newArbre(0,NULL,NULL);
-				addMot(feuillebis -> suivant,mot,i+1);
+				if (feuillebis -> suivant == NULL) feuillebis -> suivant = Arbre_NewArbre(0,NULL,NULL);
+				Arbre_AddMot(feuillebis -> suivant,mot,i+1);
 				return ;
 			}
 			else if (feuillebis -> frere != NULL)
@@ -236,7 +135,7 @@ void addMot(Arbre feuille,char* mot,int i)
 				if (feuillebis -> caractere == 0)
 				{
 					feuillebis -> caractere = mot[i];
-					addMot(feuillebis -> suivant,mot,i+1);
+					Arbre_AddMot(feuillebis -> suivant,mot,i+1);
 					return ;
 				}
 				else feuillebis = feuillebis -> frere;
@@ -246,15 +145,15 @@ void addMot(Arbre feuille,char* mot,int i)
 				if (feuillebis -> caractere == 0)
 				{
 					feuillebis -> caractere = mot[i];
-					feuillebis -> suivant = newArbre(0,NULL,NULL);
+					feuillebis -> suivant = Arbre_NewArbre(0,NULL,NULL);
 				}
 				else
 				{
-					feuillebis -> frere = newArbre(mot[i],NULL,newArbre(0,NULL,NULL));
+					feuillebis -> frere = Arbre_NewArbre(mot[i],NULL,Arbre_NewArbre(0,NULL,NULL));
 					feuillebis = feuillebis -> frere;
 
 				}
-				addMot(feuillebis -> suivant,mot,i+1);
+				Arbre_AddMot(feuillebis -> suivant,mot,i+1);
 				return ;
 			}
 		}
@@ -265,7 +164,7 @@ void addMot(Arbre feuille,char* mot,int i)
 		{
 			if (feuillebis -> caractere != 0 && feuillebis -> caractere != '#')
 			{
-				if (feuillebis -> frere == NULL) feuillebis -> frere = newArbre(0,NULL,NULL);
+				if (feuillebis -> frere == NULL) feuillebis -> frere = Arbre_NewArbre(0,NULL,NULL);
 				feuillebis = feuillebis -> frere;
 			}
 			else if (feuillebis -> caractere == 0) feuillebis -> caractere = '#';
@@ -275,7 +174,7 @@ void addMot(Arbre feuille,char* mot,int i)
 }
 
 // Ajoute le nombre d'occurance dans le struct
-void addOcLettre(char* buffer,Config c)
+void Arbre_AddOcLettre(char* buffer,Config c)
 {
 	int i = 0;
 	while(buffer[i]!='\n' && buffer[i]!='\0')
@@ -286,14 +185,14 @@ void addOcLettre(char* buffer,Config c)
 }
 
 // Renvoie 1 si le mot est present dans l'arbre sinon 0
-int contient(Arbre feuille,char* mot,int i)
+int Arbre_Contient(Arbre feuille,char* mot,int i)
 {
     Arbre feuillebis = feuille;
     if (mot[i]!='\0' && mot[i]!='\n')
     {
     	while (feuillebis != NULL)
     	{
-    		if (feuillebis -> caractere == mot[i]) return contient(feuillebis -> suivant,mot,i+1);
+    		if (feuillebis -> caractere == mot[i]) return Arbre_Contient(feuillebis -> suivant,mot,i+1);
     		else feuillebis = feuillebis -> frere;
     	}
     	return 0;
@@ -310,7 +209,7 @@ int contient(Arbre feuille,char* mot,int i)
 }
 
 // Creer un arbre a partir d'un dictionnaire
-Arbre createArbre(Config c)
+Arbre Arbre_CreateArbre(Config c)
 {
 	// Chemin d'acces du dictionnaire
 	if (c->dictionnaire == NULL)
@@ -322,7 +221,7 @@ Arbre createArbre(Config c)
 	strcat(strcat(strcpy(path,"data/"),c->dictionnaire),".txt");
 
 	// Creation arbre
-	Arbre dictionnaire = newArbre(0,NULL,NULL);
+	Arbre dictionnaire = Arbre_NewArbre(0,NULL,NULL);
 
 	// Ouverture du fichier
 	FILE * dico = fopen(path,"r");
@@ -332,9 +231,9 @@ Arbre createArbre(Config c)
 		while(fgets(buffer,100,dico)!=NULL)
 		{
 			// Ajout des mots dans le dictionnaire
-            addMot(dictionnaire,buffer,0);
+            Arbre_AddMot(dictionnaire,buffer,0);
             // Compte les occurences de chaque lettre et les stocks
-            addOcLettre(buffer,c);
+            Arbre_AddOcLettre(buffer,c);
 		}
 		fclose(dico);
 		free(path);
@@ -354,37 +253,33 @@ Arbre createArbre(Config c)
 	free(path);
 	return NULL;
 }
-void arbre_Free(Arbre a)
+
+// Free un Arbre
+void Arbre_Free(Arbre a)
 {
 	if (a!=NULL)
 	{
-		if(a->frere!=NULL) arbre_Free(a->frere);
-		if(a->suivant!=NULL) arbre_Free(a->suivant);
+		if(a->frere!=NULL) Arbre_Free(a->frere);
+		if(a->suivant!=NULL) Arbre_Free(a->suivant);
 		free(a);
 	}
 }
 
-void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
+// Recherche tout les mots dans l'arbre compris dans le tirage
+void Arbre_LongestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
 {
-	if (a!=NULL && equals(tirage,"")!=1)
+	if (a!=NULL && Common_Equals(tirage,"")!=1)
 	{
 		for (int i = 0; i < tirage[i]!='\0'; ++i)
 		{
 			Arbre abis = a;
 			while(abis!=NULL)
 			{
-				if (abis->caractere == tirage[i])
-				{
-					longestsWord(abis->suivant,lst,delChar(tirage,tirage[i]),addChar(currentword,tirage[i]));
-				}
-				else if (abis->caractere == '#') 
-				{
-					lst = Liste_addend(lst,currentword);
-				}
+				if (abis->caractere == tirage[i]) Arbre_LongestsWord(abis->suivant,lst,Common_DelChar(tirage,tirage[i]),Common_AddChar(currentword,tirage[i]));
+				else if (abis->caractere == '#') lst = Liste_AddEnd(lst,currentword);
 				abis = abis->frere;
 			}
 		}
-		if(currentword != NULL) free(currentword);
 	}
 	else if (a!=NULL)
 	{
@@ -393,73 +288,10 @@ void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
 		{
 			if (abis->caractere == '#')
 			{
-				lst = Liste_addend(lst,currentword);
+				lst = Liste_AddEnd(lst,currentword);
 				return ;
 			}
 			else abis= abis->frere;
 		}
 	}
-	else 
-	{
-		if(currentword != NULL) free(currentword);
-	}
 }
-
-
-/*void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
-{
-	if (a!=NULL)
-	{
-		if (a->frere!=NULL) 
-		{
-			printf("a->frere\n");
-			longestsWord(a->frere,lst,tirage,currentword);
-		}
-		if (a->suivant!=NULL)
-		{
-			printf("a->suivant\n");
-			printf("addChar(%s,%c)=%s\n",currentword,a->caractere,addChar(currentword,a->caractere) );
-			longestsWord(a->suivant,lst,tirage,addChar(currentword,a->caractere));
-		}
-		if (a->caractere=='#')
-		{
-			if (currentword!=NULL)
-			{
-				printf("#\n");
-				char*tiragebis = (char*)malloc(sizeof(char)*strlen(tirage));
-				strcpy(tiragebis,tirage);
-				printf("alloc succes : %s\n",tiragebis);
-				system("pause");
-				printf("currentword = %s\n",currentword );
-				system("pause");
-				for (int i = 0; i < currentword[i]!='\0'; ++i)
-				{
-					//printf("currentword[%d] = %c\n",i,currentword[i]);
-					//system("pause");
-					int b = 1;
-					for (int j = 0; j < tiragebis[j]!='\0' && b==1; ++j)
-					{
-						//printf("tiragebis[%d] = %c\n",j,tiragebis[j]);
-						//system("pause");
-						if (currentword[i]==tiragebis[i])
-						{
-							//printf("oui\n");
-							strcpy(tiragebis,delChar(tiragebis,currentword[i]));
-							b=0;
-						}
-					}
-				}
-				printf("out #\n");
-				if (strlen(tirage)-strlen(tiragebis)==strlen(currentword)) 
-				{
-					lst = Liste_add(lst,currentword);
-					printf("lst = Liste_add(lst,%s)\n",currentword);
-					system("pause");
-				}
-				free(currentword);
-				free(tiragebis);
-			}
-		}
-	}
-}*/
-

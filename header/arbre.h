@@ -1,3 +1,4 @@
+// Structure Arbre
 typedef struct Feuille
 {
 	char caractere; // '#' fin de mot
@@ -5,6 +6,7 @@ typedef struct Feuille
 	struct Feuille* suivant;
 }*Arbre;
 
+// Structure Config
 typedef struct config
 {
 	int occLettre[26];
@@ -13,49 +15,32 @@ typedef struct config
 	char* dictionnaire;
 }*Config;
 
-/*
-char* openBalise(char* content);
-
-char* closeBalise(char* content);
-
-char* uniqueBalise(char* content);*/
-
-// Genere un nombre aleatoire
-int randnumber(int min,int max);
-
-// Supprime la premier occurence d'un caractere dans une chaine
-char* delChar(char* chaine,char c);
-
-char* addChar(char* chaine,char c);
-
 // Donne une lettre tire aleatoirement
-char* pullTirage(Config c);
+char* Arbre_PullTirage(Config c);
 
 // Verifie si le mot et dans le tirage
-int inTirage(char* tirage,char* mot);
-
-int isDictionnaire(char* dic);
+int Arbre_InTirage(char* tirage,char* mot);
 
 // Alloue une nouvelle feuille de l'arbre
-Arbre newArbre(char c,struct Feuille* frere,struct Feuille* suivant);
+Arbre Arbre_NewArbre(char c,struct Feuille* frere,struct Feuille* suivant);
 
 // Alloue la configuration
-Config newConfig(char* path);
+Config Arbre_NewConfig(char* path);
 
 // Ajoute un mot dans un arbre
-void addMot(Arbre feuille,char* mot,int i);
+void Arbre_AddMot(Arbre feuille,char* mot,int i);
 
 // Ajoute le nombre d'occurance dans le struct
-void addOcLettre(char* buffer,Config c);
+void Arbre_AddOcLettre(char* buffer,Config c);
 
 // Renvoie 1 si le mot est present dans l'arbre sinon 0
-int contient(Arbre feuille,char* mot,int i);
+int Arbre_Contient(Arbre feuille,char* mot,int i);
 
 // Creer un arbre a partir d'un dictionnaire
-Arbre createArbre(Config c);
+Arbre Arbre_CreateArbre(Config c);
 
-void notifyIni(char* property,char* value);
+// Free un Arbre
+void Arbre_Free(Arbre a);
 
-void arbre_Free(Arbre a);
-
-void longestsWord(Arbre a,Liste lst,char* tirage,char* currentword);
+// Recherche tout les mots dans l'arbre compris dans le tirage
+void Arbre_LongestsWord(Arbre a,Liste lst,char* tirage,char* currentword);
