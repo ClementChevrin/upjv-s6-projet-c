@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../header/liste.h"
 #include "../header/affichage.h"
 #include "../header/arbre.h"
 #include "../header/common.h"
-#include "../header/liste.h"
 
 int main(int argc, char const *argv[])
 {
