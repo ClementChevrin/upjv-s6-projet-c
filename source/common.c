@@ -100,8 +100,10 @@ void Common_NotifyIni(char* property,char* value)
 			}
 			fclose(oldfile);
 		}
+		else fprintf(stderr, "Erreur : Fichier config.ini introuvable dans le repertoire data\n");
 		fclose(newfile);
 	}
+	else fprintf(stderr, "Erreur : Fichier de modification impossible a creer dans le repertoire data\n");
 	remove("data/config.ini");
 	rename("data/nconfig.ini","data/config.ini");
 }

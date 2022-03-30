@@ -294,4 +294,5 @@ void Arbre_LongestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
 			else abis= abis->frere;
 		}
 	}
+	if(currentword != NULL) free(currentword);
 }

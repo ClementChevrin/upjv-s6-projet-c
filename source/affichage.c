@@ -29,48 +29,91 @@ char* Affichage_Title()
 // Affiche une liste de mot dans un cadre
 void Affichage_WordList(char * title,int col,int widthcol,int line,Liste mot)
 {
-	if (title!=NULL) printf("  %s:\n",title);
-	Liste lst = mot;
-	printf("   \xda");
-	for (int i = 0; i < col; ++i) for (int j = 0; j < widthcol; ++j)printf("\xc4");
-	printf("\b\xbf\n");
-	for (int i = 0; i < line; ++i)
-	{
-		printf("   \xb3");
-		for (int j = 0; j < col; ++j)
+	#ifdef _WIN32
+		if (title!=NULL) printf("  %s:\n",title);
+		Liste lst = mot;
+		printf("   \xda");
+		for (int i = 0; i < col; ++i) for (int j = 0; j < widthcol; ++j)printf("\xc4");
+		printf("\b\xbf\n");
+		for (int i = 0; i < line; ++i)
 		{
-			if (lst!=NULL)
+			printf("   \xb3");
+			for (int j = 0; j < col; ++j)
 			{
-				int size_mot = strlen(lst->item);
-				printf("-%s",lst->item);
-				for (int k = size_mot; k < widthcol-1; ++k)printf(" ");
+				if (lst!=NULL)
+				{
+					int size_mot = strlen(lst->item);
+					printf("-%s",lst->item);
+					for (int k = size_mot; k < widthcol-1; ++k)printf(" ");
+				}
+				else 
+				{
+					for (int k = 0; k < widthcol; ++k)printf(" ");
+				}
+				if (lst!=NULL) lst = lst->next;
 			}
-			else 
-			{
-				for (int k = 0; k < widthcol; ++k)printf(" ");
-			}
-			if (lst!=NULL) lst = lst->next;
+			printf("\b\xb3\n");
 		}
-		printf("\b\xb3\n");
-	}
-	printf("   \xc0");
-	for (int i = 0; i < col; ++i) for (int j = 0; j < widthcol; ++j)printf("\xc4");
-	printf("\b\xd9\n");
+		printf("   \xc0");
+		for (int i = 0; i < col; ++i) for (int j = 0; j < widthcol; ++j)printf("\xc4");
+		printf("\b\xd9\n");
+	#else
+	 	if (title!=NULL) printf("  %s:\n",title);
+		Liste lst = mot;
+		printf("   +");
+		for (int i = 0; i < col; ++i) for (int j = 0; j < widthcol; ++j)printf("-");
+		printf("+\n");
+		for (int i = 0; i < line; ++i)
+		{
+			printf("   |");
+			for (int j = 0; j < col; ++j)
+			{
+				if (lst!=NULL)
+				{
+					int size_mot = strlen(lst->item);
+					printf("-%s",lst->item);
+					for (int k = size_mot; k < widthcol-1; ++k)printf(" ");
+				}
+				else 
+				{
+					for (int k = 0; k < widthcol; ++k)printf(" ");
+				}
+				if (lst!=NULL) lst = lst->next;
+			}
+			printf("|\n");
+		}
+		printf("   +");
+		for (int i = 0; i < col; ++i) for (int j = 0; j < widthcol; ++j)printf("-");
+		printf("+\n");
+	#endif
 }
 
 // Affiche une liste de lettre
 void Affichage_LetterList(char* title,char* listletter)
 {
-	if (title!=NULL) printf("  %s:\n",title);
-	int nbletter = strlen(listletter);
-	printf("   \xda");
-	for (int i = 0; i < nbletter; ++i) printf("\xc4\xc4\xc4\xc2");
-	printf("\b\xbf\n   ");
-	for (int i = 0; i < nbletter; ++i) printf("\xb3 %c ",listletter[i]);
-	printf("\xb3\n");
-	printf("   \xc0");
-	for (int i = 0; i < nbletter; ++i) printf("\xc4\xc4\xc4\xc1");
-	printf("\b\xd9\n");
+	#ifdef _WIN32
+		if (title!=NULL) printf("  %s:\n",title);
+		int nbletter = strlen(listletter);
+		printf("   \xda");
+		for (int i = 0; i < nbletter; ++i) printf("\xc4\xc4\xc4\xc2");
+		printf("\b\xbf\n   ");
+		for (int i = 0; i < nbletter; ++i) printf("\xb3 %c ",listletter[i]);
+		printf("\xb3\n");
+		printf("   \xc0");
+		for (int i = 0; i < nbletter; ++i) printf("\xc4\xc4\xc4\xc1");
+		printf("\b\xd9\n");
+	#else
+	 	if (title!=NULL) printf("  %s:\n",title);
+		int nbletter = strlen(listletter);
+		printf("   +");
+		for (int i = 0; i < nbletter; ++i) printf("---+");
+		printf("\n   ");
+		for (int i = 0; i < nbletter; ++i) printf("| %c ",listletter[i]);
+		printf("|\n");
+		printf("   +");
+		for (int i = 0; i < nbletter; ++i) printf("---+");
+		printf("\n");
+	#endif
 }
 
 // Affiche un menu de choix
