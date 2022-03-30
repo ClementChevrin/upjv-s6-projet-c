@@ -52,8 +52,27 @@ int main(int argc, char const *argv[])
 				while(Common_Equals(ouinon,"o"))
 				{
 					strcpy(retour_3,"");
-					char* tirage = Arbre_PullTirage(c);
 
+					Liste lstlong = NULL;
+					char* tirage;
+					int b=1;
+					printf("patientez...\n");
+					while(b)
+					{
+						tirage = Arbre_PullTirage(c);
+						// Recuperation d'une liste de mot possible et garde les plus cours
+						Liste lst = NULL;
+						lst = Liste_Add(lst,"");
+						Liste_Print(lst);
+						Arbre_LongestsWord(arb,lst,tirage,NULL);
+						if (Liste_Size(lst) > 1)
+						{
+							lstlong = Liste_Longest(lst,Liste_SizeLongestWord(lst));
+							b=0;
+						}
+						Liste_Free(lst);
+					}
+					
 					// Saisie d'un mot valide
 					while(Arbre_Contient(arb,retour_3,0)!=1 || Arbre_InTirage(tirage,retour_3)!=1)
 					{
@@ -64,15 +83,7 @@ int main(int argc, char const *argv[])
 						printf("\n\n\\>");
 						scanf("%s",retour_3);
 					}
-					printf("patientez...\n");
 
-					// Recuperation d'une liste de mot possible et garde les plus cours
-					Liste lst = NULL;
-					lst = Liste_Add(lst,"");
-					Arbre_LongestsWord(arb,lst,tirage,NULL);
-					Liste lstlong = NULL;
-					lstlong = Liste_Longest(lst,Liste_SizeLongestWord(lst));
-					
 					// Affiche les mots les plus longs et propose de recommencer ou de quitter
 					strcpy(ouinon,"");
 					while(!Common_Equals(ouinon,"o") && !Common_Equals(ouinon,"n"))
@@ -84,7 +95,6 @@ int main(int argc, char const *argv[])
 						printf(" * \"%s\" est un mot correct *\nVoulez-vous rejouer? [o/n]\n\\>",retour_3);
 						scanf("%s",ouinon);
 					}
-					Liste_Free(lst);
 					Liste_Free(lstlong);
 					free(tirage);
 				}

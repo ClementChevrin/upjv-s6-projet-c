@@ -241,11 +241,14 @@ Arbre Arbre_CreateArbre(Config c)
 		for (int i = 0; i < 26; ++i) c->total=c->occLettre[i]+c->total;
 		// Reduction des totaux pour rand()
 		int ratio = c->total/30000;
-		c->total = 0;
-		for (int i = 0; i < 26; ++i) 
+		if(ratio > 1)
 		{
-			c->occLettre[i] = c->occLettre[i]/ratio; 	
-			c->total=c->occLettre[i]+c->total;
+			c->total = 0;
+			for (int i = 0; i < 26; ++i) 
+			{
+				c->occLettre[i] = c->occLettre[i]/ratio; 	
+				c->total=c->occLettre[i]+c->total;
+			}
 		}
 		return dictionnaire;
 	}
@@ -294,5 +297,5 @@ void Arbre_LongestsWord(Arbre a,Liste lst,char* tirage,char* currentword)
 			else abis= abis->frere;
 		}
 	}
-	if(currentword != NULL) free(currentword);
+	//if(currentword != NULL) free(currentword);
 }
